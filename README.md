@@ -14,5 +14,5 @@ HOW TO USE:
 
 With this script you can:
 
-• Use 2 accounts to farm kills in a safe place (specific coordinates)
-• Easily complete Killstreak's mastery quests
+- Use 2 accounts to farm kills in a safe place (specific coordinates) 
+- Easily complete Killstreak's mastery quests
