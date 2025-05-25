@@ -108,12 +108,10 @@ IYButton.MouseButton1Click:Connect(function()
     end)
 end)
 
--- State control
 local running = false
 local targetPlayer
 local hasResetThisRagdoll = false
 
--- Functions
 local function findPlayer(nickname)
     for _, player in ipairs(Players:GetPlayers()) do
         if player.Name:lower():find(nickname:lower()) or player.DisplayName:lower():find(nickname:lower()) then
