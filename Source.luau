@@ -219,13 +219,6 @@ local function stopHelper()
     running = false
 end
 
-CloseButton.MouseButton1Click:Connect(function()
-    stopHelper()
-    if ScreenGui then
-        ScreenGui:Destroy()
-    end
-end)
-
 MinimizeButton.MouseButton1Click:Connect(function()
     local minimized = TextBox.Visible == false
     for _, child in ipairs(Frame:GetChildren()) do
@@ -236,6 +229,13 @@ MinimizeButton.MouseButton1Click:Connect(function()
         end
     end
     Frame.Size = minimized and UDim2.new(0, 250, 0, 180) or UDim2.new(0, 250, 0, 30)
+end)
+
+CloseButton.MouseButton1Click:Connect(function()
+    stopHelper()
+    if ScreenGui then
+        ScreenGui:Destroy()
+    end
 end)
 
 LocalPlayer.CharacterAdded:Connect(function()
