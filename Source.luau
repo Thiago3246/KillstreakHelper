@@ -4,9 +4,9 @@ end
 
 local cloneref = cloneref or function(...) return ... end
 
-local Players = cloneref(game:GetService("Players"))
-local StarterGui = cloneref(game:GetService("StarterGui"))
 local CoreGui = cloneref(game:GetService("CoreGui"))
+local StarterGui = cloneref(game:GetService("StarterGui"))
+local Players = cloneref(game:GetService("Players"))
 local LocalPlayer = Players.LocalPlayer
 
 local guiParent = (gethui and gethui()) or CoreGui:FindFirstChild("RobloxGui") or CoreGui
@@ -127,7 +127,7 @@ end
 local function showNotification(message)
     pcall(function()
         StarterGui:SetCore("SendNotification", {
-            Title = "Killstreak Helper",
+            Title = "Error",
             Text = message,
             Duration = 3
         })
