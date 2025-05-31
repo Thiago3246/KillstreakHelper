@@ -1,3 +1,9 @@
+if KsHelper_Loaded then
+    return
+end
+
+pcall(function() getgenv().KsHelper_Loaded = true end)
+
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
@@ -85,15 +91,15 @@ StopButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 StopButton.Font = Enum.Font.GothamBold
 StopButton.TextSize = 14
 
-local TipLabel = Instance.new("TextLabel", Frame)
-TipLabel.Position = UDim2.new(0.5, -100, 0, 115)
-TipLabel.Size = UDim2.new(0, 200, 0, 20)
-TipLabel.BackgroundTransparency = 1
-TipLabel.Text = 'TIP: Use "view" cmd on IY to spectate!'
-TipLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TipLabel.Font = Enum.Font.Gotham
-TipLabel.TextSize = 12
-TipLabel.TextWrapped = true
+local Tip = Instance.new("TextLabel", Frame)
+Tip.Position = UDim2.new(0.5, -100, 0, 115)
+Tip.Size = UDim2.new(0, 200, 0, 20)
+Tip.BackgroundTransparency = 1
+Tip.Text = 'TIP: Use "view" cmd on IY to spectate!'
+Tip.TextColor3 = Color3.fromRGB(255, 255, 255)
+Tip.Font = Enum.Font.Gotham
+Tip.TextSize = 12
+Tip.TextWrapped = true
 
 local IYButton = Instance.new("TextButton", Frame)
 IYButton.Position = UDim2.new(0.5, -100, 0, 140)
@@ -131,13 +137,11 @@ local function findPlayer(nickname)
 end
 
 local function showNotification(message)
-    pcall(function()
         StarterGui:SetCore("SendNotification", {
             Title = "Error",
             Text = message,
             Duration = 3
         })
-    end)
 end
 
 local function startFollowing()
