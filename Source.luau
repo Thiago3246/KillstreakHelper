@@ -1,12 +1,15 @@
-local cloneref = cloneref or function(o) return o end
+if not game:IsLoaded() then
+    game.Loaded:Wait()
+end
+
+local cloneref = cloneref or function(...) return ... end
 
 local Players = cloneref(game:GetService("Players"))
 local StarterGui = cloneref(game:GetService("StarterGui"))
 local CoreGui = cloneref(game:GetService("CoreGui"))
-local Workspace = cloneref(game:GetService("Workspace"))
 local LocalPlayer = Players.LocalPlayer
 
-local guiParent = (gethui and gethui()) or CoreGui
+local guiParent = (gethui and gethui()) or CoreGui:FindFirstChild("RobloxGui") or CoreGui
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "KillstreakHelper"
@@ -181,7 +184,7 @@ local function waitForArenaJoin()
     if not isInArena then return end
 
     if not isInArena.Value then
-        local portal = Workspace:FindFirstChild("Lobby") and Workspace.Lobby:FindFirstChild("Teleport1")
+        local portal = workspace:FindFirstChild("Lobby") and workspace.Lobby:FindFirstChild("Teleport1")
         if portal and portal:IsA("BasePart") then
             rootPart.CFrame = portal.CFrame
         end
