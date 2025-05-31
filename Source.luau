@@ -98,7 +98,7 @@ TipLabel.TextWrapped = true
 local IYButton = Instance.new("TextButton", Frame)
 IYButton.Position = UDim2.new(0.5, -100, 0, 140)
 IYButton.Size = UDim2.new(0, 200, 0, 25)
-IYButton.Text = "Execute IY"
+IYButton.Text = "Execute Infinite Yield"
 IYButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 IYButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 IYButton.Font = Enum.Font.GothamBold
@@ -110,6 +110,12 @@ IYButton.MouseButton1Click:Connect(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
     end)
 end)
+
+for _, part in ipairs(workspace:FindFirstChild("Lobby") and FindFirstChild("brazil"):GetDescendants()) do
+    if part:IsA("BasePart") then
+        part.CanTouch = false
+    end
+end
 
 local running = false
 local targetPlayer
@@ -137,27 +143,33 @@ end
 local function startFollowing()
     while running and targetPlayer do
         local character = LocalPlayer.Character
-        if not character then task.wait(0.2) continue end
+        if not character then task.wait(0.1) continue end
 
         local humanoid = character:FindFirstChildOfClass("Humanoid")
-        if not humanoid or humanoid.Health <= 0 then task.wait(0.2) continue end
+        if not humanoid or humanoid.Health <= 0 then task.wait(0.1) continue end
 
         local isInArena = character:FindFirstChild("isInArena")
-        if not isInArena or not isInArena.Value then task.wait(0.2) continue end
+        if not isInArena or not isInArena.Value then task.wait(0.1) continue end
 
         local rootPart = character:FindFirstChild("HumanoidRootPart")
         local ragdolled = character:FindFirstChild("Ragdolled")
         local resetEvent = LocalPlayer:FindFirstChild("Reset")
 
         local targetCharacter = targetPlayer.Character
-        if not targetCharacter then task.wait(0.2) continue end
+        if not targetCharacter then task.wait(0.1) continue end
 
-        local targetArena = targetCharacter:FindFirstChild("isInArena")
+        local isTargetInArena = targetCharacter:FindFirstChild("isInArena")
         local targetHumanoid = targetCharacter:FindFirstChildOfClass("Humanoid")
         local targetRoot = targetCharacter:FindFirstChild("HumanoidRootPart")
+        local isTargetInArenaV2 = targetCharacter:FindFirstChild("KillstreakLevel")
 
-        if not targetArena or not targetArena.Value or not targetRoot or not targetHumanoid or targetHumanoid.Health <= 0 then
-            task.wait(0.2)
+        if(not isTargetInArena or not targetRoot or not targetHumanoid or targetHumanoid.Health <= 0) then
+            task.wait(0.1)
+            continue
+        end
+
+        if(not isTargetInArenaV2) and (not isTargetInArena.Value) then
+            task.wait(0.1)
             continue
         end
 
@@ -180,10 +192,13 @@ local function waitForArenaJoin()
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     local rootPart = character:WaitForChild("HumanoidRootPart")
     local isInArena = character:WaitForChild("isInArena", 5)
+    local targetCharacter = targetPlayer.Character
+    local isTargetInArena = targetCharacter and targetCharacter:FindFirstChild("isInArena")
+    local isTargetInArenaV2 = targetCharacter and targetCharacter:FindFirstChild("KillstreakLevel")
 
     if not isInArena then return end
 
-    if not isInArena.Value then
+    if(not isTargetInArena or not isTargetInArena.Value) and not isTargetInArenaV2 then
         local portal = workspace:FindFirstChild("Lobby") and workspace.Lobby:FindFirstChild("Teleport1")
         if portal and portal:IsA("BasePart") then
             rootPart.CFrame = portal.CFrame
