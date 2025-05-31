@@ -111,7 +111,7 @@ IYButton.MouseButton1Click:Connect(function()
     end)
 end)
 
-for _, part in ipairs(workspace:FindFirstChild("Lobby") and FindFirstChild("brazil"):GetDescendants()) do
+for _, part in ipairs(workspace:WaitForChild("Lobby"):WaitForChild("brazil"):GetDescendants()) do
     if part:IsA("BasePart") then
         part.CanTouch = false
     end
@@ -191,23 +191,23 @@ end
 local function waitForArenaJoin()
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     local rootPart = character:WaitForChild("HumanoidRootPart")
-    local isInArena = character:WaitForChild("isInArena", 5)
-    local targetCharacter = targetPlayer.Character
-    local isTargetInArena = targetCharacter and targetCharacter:FindFirstChild("isInArena")
-    local isTargetInArenaV2 = targetCharacter and targetCharacter:FindFirstChild("KillstreakLevel")
+    local isInArena = character:WaitForChild("isInArena")
 
-    if not isInArena then return end
+    while running and targetPlayer do
+        local targetCharacter = targetPlayer.Character
+        if targetCharacter then
+            local isTargetInArena = targetCharacter:FindFirstChild("isInArena")
+            local isTargetInArenaV2 = targetCharacter:FindFirstChild("KillstreakLevel")
 
-    if(not isTargetInArena or not isTargetInArena.Value) and not isTargetInArenaV2 then
-        local portal = workspace:FindFirstChild("Lobby") and workspace.Lobby:FindFirstChild("Teleport1")
-        if portal and portal:IsA("BasePart") then
-            rootPart.CFrame = portal.CFrame
+            if(isTargetInArena and isTargetInArena.Value) or isTargetInArenaV2 then
+                local portal = workspace:FindFirstChild("Lobby") and workspace.Lobby:FindFirstChild("Teleport1")
+                if portal and portal:IsA("BasePart") then
+                    rootPart.CFrame = portal.CFrame
+                end
+                break
+            end
         end
-        repeat
-            task.wait(0.2)
-            character = LocalPlayer.Character
-            isInArena = character and character:FindFirstChild("isInArena")
-        until isInArena and isInArena.Value
+        task.wait(0.2)
     end
 
     if running then
