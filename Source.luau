@@ -305,7 +305,7 @@ CloseButton.MouseButton1Click:Connect(function()
     if ScreenGui then
         ScreenGui:Destroy()
     end
-    getgenv().KsHelper_Loaded = nil -- ADICIONE ESTA LINHA!
+    getgenv().KsHelper_Loaded = nil
 end)
 
 LocalPlayer.CharacterAdded:Connect(function()
