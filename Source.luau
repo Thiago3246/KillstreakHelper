@@ -1,8 +1,8 @@
-if KsHelper_Loaded then
+if getgenv().KsHelper_Loaded then
     return
 end
 
-pcall(function() getgenv().KsHelper_Loaded = true end)
+getgenv().KsHelper_Loaded = true
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
@@ -22,18 +22,24 @@ ScreenGui.Name = "KillstreakHelper"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = guiParent
 
-local Frame = Instance.new("Frame", ScreenGui)
+local Frame = Instance.new("Frame")
 Frame.Size = UDim2.new(0, 250, 0, 180)
 Frame.Position = UDim2.new(0.5, -125, 0.5, -90)
 Frame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 Frame.BorderSizePixel = 0
 Frame.Active = true
 Frame.Draggable = true
+Frame.Parent = ScreenGui
 
-Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 8)
-Instance.new("UIStroke", Frame).Color = Color3.fromRGB(60, 60, 60)
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 8)
+UICorner.Parent = Frame
 
-local Title = Instance.new("TextLabel", Frame)
+local UIStroke = Instance.new("UIStroke")
+UIStroke.Color = Color3.fromRGB(60, 60, 60)
+UIStroke.Parent = Frame
+
+local Title = Instance.new("TextLabel")
 Title.Size = UDim2.new(1, -30, 0, 30)
 Title.Position = UDim2.new(0, 25, 0, 0)
 Title.BackgroundTransparency = 1
@@ -42,8 +48,9 @@ Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.Font = Enum.Font.GothamBold
 Title.TextSize = 16
 Title.TextXAlignment = Enum.TextXAlignment.Left
+Title.Parent = Frame
 
-local MinimizeButton = Instance.new("TextButton", Frame)
+local MinimizeButton = Instance.new("TextButton")
 MinimizeButton.Size = UDim2.new(0, 25, 0, 25)
 MinimizeButton.Position = UDim2.new(1, -60, 0, 2)
 MinimizeButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
@@ -51,9 +58,13 @@ MinimizeButton.Text = "_"
 MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 MinimizeButton.Font = Enum.Font.GothamBold
 MinimizeButton.TextSize = 18
-Instance.new("UICorner", MinimizeButton).CornerRadius = UDim.new(0, 6)
+MinimizeButton.Parent = Frame
 
-local CloseButton = Instance.new("TextButton", Frame)
+local MinimizeButtonUICorner = Instance.new("UICorner")
+MinimizeButtonUICorner.CornerRadius = UDim.new(0, 6)
+MinimizeButtonUICorner.Parent = MinimizeButton
+
+local CloseButton = Instance.new("TextButton")
 CloseButton.Size = UDim2.new(0, 25, 0, 25)
 CloseButton.Position = UDim2.new(1, -30, 0, 2)
 CloseButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
@@ -61,9 +72,13 @@ CloseButton.Text = "X"
 CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseButton.Font = Enum.Font.GothamBold
 CloseButton.TextSize = 14
-Instance.new("UICorner", CloseButton).CornerRadius = UDim.new(0, 6)
+CloseButton.Parent = Frame
 
-local TextBox = Instance.new("TextBox", Frame)
+local CloseButtonUICorner = Instance.new("UICorner")
+CloseButtonUICorner.CornerRadius = UDim.new(0, 6)
+CloseButtonUICorner.Parent = CloseButton
+
+local TextBox = Instance.new("TextBox")
 TextBox.Position = UDim2.new(0.5, -100, 0, 40)
 TextBox.Size = UDim2.new(0, 200, 0, 30)
 TextBox.Text = ""
@@ -72,8 +87,9 @@ TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextBox.Font = Enum.Font.Gotham
 TextBox.TextSize = 14
+TextBox.Parent = Frame
 
-local StartButton = Instance.new("TextButton", Frame)
+local StartButton = Instance.new("TextButton")
 StartButton.Position = UDim2.new(0.5, -100, 0, 80)
 StartButton.Size = UDim2.new(0, 90, 0, 30)
 StartButton.Text = "Start"
@@ -81,8 +97,9 @@ StartButton.BackgroundColor3 = Color3.fromRGB(40, 120, 40)
 StartButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 StartButton.Font = Enum.Font.GothamBold
 StartButton.TextSize = 14
+StartButton.Parent = Frame
 
-local StopButton = Instance.new("TextButton", Frame)
+local StopButton = Instance.new("TextButton")
 StopButton.Position = UDim2.new(0.5, 10, 0, 80)
 StopButton.Size = UDim2.new(0, 90, 0, 30)
 StopButton.Text = "Stop"
@@ -90,8 +107,9 @@ StopButton.BackgroundColor3 = Color3.fromRGB(120, 40, 40)
 StopButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 StopButton.Font = Enum.Font.GothamBold
 StopButton.TextSize = 14
+StopButton.Parent = Frame
 
-local Tip = Instance.new("TextLabel", Frame)
+local Tip = Instance.new("TextLabel")
 Tip.Position = UDim2.new(0.5, -100, 0, 115)
 Tip.Size = UDim2.new(0, 200, 0, 20)
 Tip.BackgroundTransparency = 1
@@ -100,8 +118,9 @@ Tip.TextColor3 = Color3.fromRGB(255, 255, 255)
 Tip.Font = Enum.Font.Gotham
 Tip.TextSize = 12
 Tip.TextWrapped = true
+Tip.Parent = Frame
 
-local IYButton = Instance.new("TextButton", Frame)
+local IYButton = Instance.new("TextButton")
 IYButton.Position = UDim2.new(0.5, -100, 0, 140)
 IYButton.Size = UDim2.new(0, 200, 0, 25)
 IYButton.Text = "Execute Infinite Yield"
@@ -109,7 +128,11 @@ IYButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
 IYButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 IYButton.Font = Enum.Font.GothamBold
 IYButton.TextSize = 14
-Instance.new("UICorner", IYButton).CornerRadius = UDim.new(0, 6)
+IYButton.Parent = Frame
+
+local IYButtonUICorner = Instance.new("UICorner")
+IYButtonUICorner.CornerRadius = UDim.new(0, 6)
+IYButtonUICorner.Parent = IYButton
 
 IYButton.MouseButton1Click:Connect(function()
     pcall(function()
