@@ -134,10 +134,27 @@ local IYButtonUICorner = Instance.new("UICorner")
 IYButtonUICorner.CornerRadius = UDim.new(0, 6)
 IYButtonUICorner.Parent = IYButton
 
+local function showNotification(message)
+        StarterGui:SetCore("SendNotification", {
+            Title = "Error",
+            Text = message,
+            Duration = 3
+        })
+end
+
 IYButton.MouseButton1Click:Connect(function()
-    pcall(function()
+    if getgenv().IY_LOADED then
+        showNotification("Infinite Yield is already running!")
+        return
+    end
+
+    local success, err = pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
     end)
+
+    if not success then
+        showNotification("Infinite Yield failed to load")
+    end
 end)
 
 for _, part in ipairs(workspace:WaitForChild("Lobby"):WaitForChild("brazil"):GetDescendants()) do
@@ -157,14 +174,6 @@ local function findPlayer(nickname)
         end
     end
     return nil
-end
-
-local function showNotification(message)
-        StarterGui:SetCore("SendNotification", {
-            Title = "Error",
-            Text = message,
-            Duration = 3
-        })
 end
 
 local function startFollowing()
