@@ -239,7 +239,7 @@ local function startFollowing()
     end
 end
 
-local function waitForArenaJoin()
+local function enterArena()
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
     local rootPart = character:WaitForChild("HumanoidRootPart")
     local isInArena = character:WaitForChild("isInArena")
@@ -281,7 +281,7 @@ local function startHelper()
 
     targetPlayer = player
     running = true
-    task.spawn(waitForArenaJoin)
+    task.spawn(enterArena)
 end
 
 local function stopHelper()
@@ -311,7 +311,7 @@ end)
 LocalPlayer.CharacterAdded:Connect(function()
     if running and targetPlayer then
         hasResetThisRagdoll = false
-        waitForArenaJoin()
+        enterArena()
     end
 end)
 
