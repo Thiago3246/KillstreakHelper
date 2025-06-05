@@ -307,7 +307,11 @@ end
 
 local function stopHelper()
     if running and targetPlayer then
-        showNotification("Stopped helping " .. targetPlayer.DisplayName)
+    StarterGui:SetCore("SendNotification", {
+        Title = "Killstreak Helper",
+        Text = "Stopped helping " .. targetPlayer.DisplayName,
+        Duration = 3
+    })
     end
     running = false
 end
