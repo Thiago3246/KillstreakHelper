@@ -17,7 +17,7 @@ if getgenv().KsHelper_Loaded then
     return
 end
 
-getgenv().KsHelper_Loaded = true
+pcall(function() getgenv().KsHelper_Loaded = true end)
 
 if not game:IsLoaded() then
     game.Loaded:Wait()
