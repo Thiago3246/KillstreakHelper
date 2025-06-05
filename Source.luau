@@ -193,6 +193,20 @@ end
 
 local function startFollowing()
     while running and targetPlayer do
+        local found = false
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player == targetPlayer then
+                found = true
+                break
+            end
+        end
+
+        if not found then
+            showNotification(targetPlayer.DisplayName .. " left")
+            stopHelper()
+            break
+        end
+
         local character = LocalPlayer.Character
         if not character then task.wait(0.1) continue end
 
@@ -281,10 +295,20 @@ local function startHelper()
 
     targetPlayer = player
     running = true
+
+    StarterGui:SetCore("SendNotification", {
+        Title = "Killstreak Helper",
+        Text = "Started helping " .. targetPlayer.DisplayName,
+        Duration = 3
+    })
+
     task.spawn(enterArena)
 end
 
 local function stopHelper()
+    if running and targetPlayer then
+        showNotification("Stopped helping " .. targetPlayer.DisplayName)
+    end
     running = false
 end
 
