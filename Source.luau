@@ -124,17 +124,6 @@ StopButton.Font = Enum.Font.GothamBold
 StopButton.TextSize = 14
 StopButton.Parent = Frame
 
-local Tip = Instance.new("TextLabel")
-Tip.Position = UDim2.new(0.5, -100, 0, 115)
-Tip.Size = UDim2.new(0, 200, 0, 20)
-Tip.BackgroundTransparency = 1
-Tip.Text = 'TIP: Use "view" cmd on IY to spectate!'
-Tip.TextColor3 = Color3.fromRGB(255, 255, 255)
-Tip.Font = Enum.Font.Gotham
-Tip.TextSize = 12
-Tip.TextWrapped = true
-Tip.Parent = Frame
-
 local IYButton = Instance.new("TextButton")
 IYButton.Position = UDim2.new(0.5, -100, 0, 140)
 IYButton.Size = UDim2.new(0, 200, 0, 25)
@@ -193,20 +182,6 @@ end
 
 local function startFollowing()
     while running and targetPlayer do
-        local found = false
-        for _, player in ipairs(Players:GetPlayers()) do
-            if player == targetPlayer then
-                found = true
-                break
-            end
-        end
-
-        if not found then
-            showNotification(targetPlayer.DisplayName .. " left")
-            stopHelper()
-            break
-        end
-
         local character = LocalPlayer.Character
         if not character then task.wait(0.1) continue end
 
@@ -295,24 +270,10 @@ local function startHelper()
 
     targetPlayer = player
     running = true
-
-    StarterGui:SetCore("SendNotification", {
-        Title = "Killstreak Helper",
-        Text = "Started helping " .. targetPlayer.DisplayName,
-        Duration = 3
-    })
-
     task.spawn(enterArena)
 end
 
 local function stopHelper()
-    if running and targetPlayer then
-    StarterGui:SetCore("SendNotification", {
-        Title = "Killstreak Helper",
-        Text = "Stopped helping " .. targetPlayer.DisplayName,
-        Duration = 3
-    })
-    end
     running = false
 end
 
