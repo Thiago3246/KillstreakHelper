@@ -148,7 +148,7 @@ end
 
 IY.MouseButton1Click:Connect(function()
     if getgenv().IY_LOADED then
-        notify("Infinite Yield is already helperRunning!")
+        notify("Infinite Yield is already running!")
         return
     end
 
