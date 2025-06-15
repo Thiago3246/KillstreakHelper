@@ -28,7 +28,7 @@ local cloneref = cloneref or function(...) return ... end
 local CoreGui = cloneref(game:GetService("CoreGui"))
 local StarterGui = cloneref(game:GetService("StarterGui"))
 local Players = cloneref(game:GetService("Players"))
-local LocalPlayer = Players.LocalPlayer
+local LocalPlayer = cloneref(Players.LocalPlayer)
 
 local guiParent = (gethui and gethui()) or CoreGui:FindFirstChild("RobloxGui") or CoreGui
 
@@ -65,33 +65,33 @@ Title.TextSize = 16
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Frame
 
-local MinimizeButton = Instance.new("TextButton")
-MinimizeButton.Size = UDim2.new(0, 25, 0, 25)
-MinimizeButton.Position = UDim2.new(1, -60, 0, 2)
-MinimizeButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-MinimizeButton.Text = "_"
-MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-MinimizeButton.Font = Enum.Font.GothamBold
-MinimizeButton.TextSize = 18
-MinimizeButton.Parent = Frame
+local Minimize = Instance.new("TextButton")
+Minimize.Size = UDim2.new(0, 25, 0, 25)
+Minimize.Position = UDim2.new(1, -60, 0, 2)
+Minimize.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+Minimize.Text = "_"
+Minimize.TextColor3 = Color3.fromRGB(255, 255, 255)
+Minimize.Font = Enum.Font.GothamBold
+Minimize.TextSize = 18
+Minimize.Parent = Frame
 
-local MinimizeButtonUICorner = Instance.new("UICorner")
-MinimizeButtonUICorner.CornerRadius = UDim.new(0, 6)
-MinimizeButtonUICorner.Parent = MinimizeButton
+local MinimizeUICorner = Instance.new("UICorner")
+MinimizeUICorner.CornerRadius = UDim.new(0, 6)
+MinimizeUICorner.Parent = Minimize
 
-local CloseButton = Instance.new("TextButton")
-CloseButton.Size = UDim2.new(0, 25, 0, 25)
-CloseButton.Position = UDim2.new(1, -30, 0, 2)
-CloseButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-CloseButton.Text = "X"
-CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseButton.Font = Enum.Font.GothamBold
-CloseButton.TextSize = 14
-CloseButton.Parent = Frame
+local Close = Instance.new("TextButton")
+Close.Size = UDim2.new(0, 25, 0, 25)
+Close.Position = UDim2.new(1, -30, 0, 2)
+Close.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+Close.Text = "X"
+Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+Close.Font = Enum.Font.GothamBold
+Close.TextSize = 14
+Close.Parent = Frame
 
-local CloseButtonUICorner = Instance.new("UICorner")
-CloseButtonUICorner.CornerRadius = UDim.new(0, 6)
-CloseButtonUICorner.Parent = CloseButton
+local CloseUICorner = Instance.new("UICorner")
+CloseUICorner.CornerRadius = UDim.new(0, 6)
+CloseUICorner.Parent = Close
 
 local TextBox = Instance.new("TextBox")
 TextBox.Position = UDim2.new(0.5, -100, 0, 40)
@@ -104,41 +104,41 @@ TextBox.Font = Enum.Font.Gotham
 TextBox.TextSize = 14
 TextBox.Parent = Frame
 
-local StartButton = Instance.new("TextButton")
-StartButton.Position = UDim2.new(0.5, -100, 0, 80)
-StartButton.Size = UDim2.new(0, 90, 0, 30)
-StartButton.Text = "Start"
-StartButton.BackgroundColor3 = Color3.fromRGB(40, 120, 40)
-StartButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-StartButton.Font = Enum.Font.GothamBold
-StartButton.TextSize = 14
-StartButton.Parent = Frame
+local Start = Instance.new("TextButton")
+Start.Position = UDim2.new(0.5, -100, 0, 80)
+Start.Size = UDim2.new(0, 90, 0, 30)
+Start.Text = "Start"
+Start.BackgroundColor3 = Color3.fromRGB(40, 120, 40)
+Start.TextColor3 = Color3.fromRGB(255, 255, 255)
+Start.Font = Enum.Font.GothamBold
+Start.TextSize = 14
+Start.Parent = Frame
 
-local StopButton = Instance.new("TextButton")
-StopButton.Position = UDim2.new(0.5, 10, 0, 80)
-StopButton.Size = UDim2.new(0, 90, 0, 30)
-StopButton.Text = "Stop"
-StopButton.BackgroundColor3 = Color3.fromRGB(120, 40, 40)
-StopButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-StopButton.Font = Enum.Font.GothamBold
-StopButton.TextSize = 14
-StopButton.Parent = Frame
+local Stop = Instance.new("TextButton")
+Stop.Position = UDim2.new(0.5, 10, 0, 80)
+Stop.Size = UDim2.new(0, 90, 0, 30)
+Stop.Text = "Stop"
+Stop.BackgroundColor3 = Color3.fromRGB(120, 40, 40)
+Stop.TextColor3 = Color3.fromRGB(255, 255, 255)
+Stop.Font = Enum.Font.GothamBold
+Stop.TextSize = 14
+Stop.Parent = Frame
 
-local IYButton = Instance.new("TextButton")
-IYButton.Position = UDim2.new(0.5, -100, 0, 140)
-IYButton.Size = UDim2.new(0, 200, 0, 25)
-IYButton.Text = "Execute Infinite Yield"
-IYButton.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-IYButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-IYButton.Font = Enum.Font.GothamBold
-IYButton.TextSize = 14
-IYButton.Parent = Frame
+local IY = Instance.new("TextButton")
+IY.Position = UDim2.new(0.5, -100, 0, 140)
+IY.Size = UDim2.new(0, 200, 0, 25)
+IY.Text = "Execute Infinite Yield"
+IY.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+IY.TextColor3 = Color3.fromRGB(255, 255, 255)
+IY.Font = Enum.Font.GothamBold
+IY.TextSize = 14
+IY.Parent = Frame
 
-local IYButtonUICorner = Instance.new("UICorner")
-IYButtonUICorner.CornerRadius = UDim.new(0, 6)
-IYButtonUICorner.Parent = IYButton
+local IY_UICorner = Instance.new("UICorner")
+IY_UICorner.CornerRadius = UDim.new(0, 6)
+IY_UICorner.Parent = IY
 
-local function showNotification(message)
+local function notify(message)
         StarterGui:SetCore("SendNotification", {
             Title = "Error",
             Text = message,
@@ -146,9 +146,9 @@ local function showNotification(message)
         })
 end
 
-IYButton.MouseButton1Click:Connect(function()
+IY.MouseButton1Click:Connect(function()
     if getgenv().IY_LOADED then
-        showNotification("Infinite Yield is already running!")
+        notify("Infinite Yield is already helperRunning!")
         return
     end
 
@@ -157,7 +157,7 @@ IYButton.MouseButton1Click:Connect(function()
     end)
 
     if not success then
-        showNotification("Infinite Yield failed to load")
+        notify("Infinite Yield failed to load")
     end
 end)
 
@@ -167,9 +167,9 @@ for _, part in ipairs(workspace:WaitForChild("Lobby"):WaitForChild("brazil"):Get
     end
 end
 
-local running = false
+local helperRunning = false
 local targetPlayer
-local hasResetThisRagdoll = false
+local alreadyReset = false
 
 local function findPlayer(nickname)
     for _, player in ipairs(Players:GetPlayers()) do
@@ -180,8 +180,8 @@ local function findPlayer(nickname)
     return nil
 end
 
-local function startFollowing()
-    while running and targetPlayer do
+local function followTarget()
+    while helperRunning and targetPlayer do
         local character = LocalPlayer.Character
         if not character then task.wait(0.1) continue end
 
@@ -214,12 +214,12 @@ local function startFollowing()
         end
 
         if ragdolled and ragdolled.Value then
-            if not hasResetThisRagdoll and resetEvent then
+            if not alreadyReset and resetEvent then
                 resetEvent:FireServer()
-                hasResetThisRagdoll = true
+                alreadyReset = true
             end
         else
-            hasResetThisRagdoll = false
+            alreadyReset = false
             if rootPart then
                 rootPart.CFrame = targetRoot.CFrame * CFrame.new(0, 0, -4)
             end
@@ -233,7 +233,7 @@ local function enterArena()
     local rootPart = character:WaitForChild("HumanoidRootPart")
     local isInArena = character:WaitForChild("isInArena")
 
-    while running and targetPlayer do
+    while helperRunning and targetPlayer do
         local targetCharacter = targetPlayer.Character
         if targetCharacter then
             local isTargetInArena = targetCharacter:FindFirstChild("isInArena")
@@ -250,38 +250,38 @@ local function enterArena()
         task.wait(0.2)
     end
 
-    if running then
-        startFollowing()
+    if helperRunning then
+        followTarget()
     end
 end
 
 local function startHelper()
     local nameInput = TextBox.Text
     if nameInput == "" then
-        showNotification("Enter a player's name!")
+        notify("Enter a player's name!")
         return
     end
 
     local player = findPlayer(nameInput)
     if not player then
-        showNotification("Player not found!")
+        notify("Player not found!")
         return
     end
 
     targetPlayer = player
-    running = true
+    helperRunning = true
     task.spawn(enterArena)
 end
 
 local function stopHelper()
-    running = false
+    helperRunning = false
 end
 
-MinimizeButton.MouseButton1Click:Connect(function()
+Minimize.MouseButton1Click:Connect(function()
     local minimized = TextBox.Visible == false
     for _, child in ipairs(Frame:GetChildren()) do
         if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
-            if child ~= Title and child ~= CloseButton and child ~= MinimizeButton then
+            if child ~= Title and child ~= Close and child ~= Minimize then
                 child.Visible = minimized
             end
         end
@@ -289,7 +289,7 @@ MinimizeButton.MouseButton1Click:Connect(function()
     Frame.Size = minimized and UDim2.new(0, 250, 0, 180) or UDim2.new(0, 250, 0, 30)
 end)
 
-CloseButton.MouseButton1Click:Connect(function()
+Close.MouseButton1Click:Connect(function()
     stopHelper()
     if ScreenGui then
         ScreenGui:Destroy()
@@ -298,11 +298,11 @@ CloseButton.MouseButton1Click:Connect(function()
 end)
 
 LocalPlayer.CharacterAdded:Connect(function()
-    if running and targetPlayer then
-        hasResetThisRagdoll = false
+    if helperRunning and targetPlayer then
+        alreadyReset = false
         enterArena()
     end
 end)
 
-StartButton.MouseButton1Click:Connect(startHelper)
-StopButton.MouseButton1Click:Connect(stopHelper)
+Start.MouseButton1Click:Connect(startHelper)
+Stop.MouseButton1Click:Connect(stopHelper)
