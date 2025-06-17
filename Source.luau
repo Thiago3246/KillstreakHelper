@@ -32,12 +32,22 @@ local LocalPlayer = cloneref(Players.LocalPlayer)
 
 local guiParent = (gethui and gethui()) or CoreGui:FindFirstChild("RobloxGui") or CoreGui
 
+local function randomString()
+	  local length = math.random(10,20)
+	  local array = {}
+	  for i = 1, length do
+        array[i] = string.char(math.random(32, 126))
+	  end
+	  return table.concat(array)
+end
+
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "KillstreakHelper"
+ScreenGui.Name = randomString()
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = guiParent
 
 local Frame = Instance.new("Frame")
+Frame.Name = randomString()
 Frame.Size = UDim2.new(0, 250, 0, 180)
 Frame.Position = UDim2.new(0.5, -125, 0.5, -90)
 Frame.BackgroundColor3 = Color3.fromRGB(36, 36, 37)
@@ -47,14 +57,17 @@ Frame.Draggable = true
 Frame.Parent = ScreenGui
 
 local UICorner = Instance.new("UICorner")
+UICorner.Name = randomString()
 UICorner.CornerRadius = UDim.new(0, 8)
 UICorner.Parent = Frame
 
 local UIStroke = Instance.new("UIStroke")
+UIStroke.Name = randomString()
 UIStroke.Color = Color3.fromRGB(60, 60, 60)
 UIStroke.Parent = Frame
 
 local Title = Instance.new("TextLabel")
+Title.Name = randomString()
 Title.Size = UDim2.new(1, -30, 0, 30)
 Title.Position = UDim2.new(0, 25, 0, 0)
 Title.BackgroundTransparency = 1
@@ -66,6 +79,7 @@ Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Frame
 
 local Minimize = Instance.new("TextButton")
+Minimize.Name = randomString()
 Minimize.Size = UDim2.new(0, 25, 0, 25)
 Minimize.Position = UDim2.new(1, -60, 0, 2)
 Minimize.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
@@ -76,10 +90,12 @@ Minimize.TextSize = 18
 Minimize.Parent = Frame
 
 local MinimizeUICorner = Instance.new("UICorner")
+MinimizeUICorner.Name = randomString()
 MinimizeUICorner.CornerRadius = UDim.new(0, 6)
 MinimizeUICorner.Parent = Minimize
 
 local Close = Instance.new("TextButton")
+Close.Name = randomString()
 Close.Size = UDim2.new(0, 25, 0, 25)
 Close.Position = UDim2.new(1, -30, 0, 2)
 Close.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
@@ -90,10 +106,12 @@ Close.TextSize = 14
 Close.Parent = Frame
 
 local CloseUICorner = Instance.new("UICorner")
+CloseUICorner.Name = randomString()
 CloseUICorner.CornerRadius = UDim.new(0, 6)
 CloseUICorner.Parent = Close
 
 local TextBox = Instance.new("TextBox")
+TextBox.Name = randomString()
 TextBox.Position = UDim2.new(0.5, -100, 0, 40)
 TextBox.Size = UDim2.new(0, 200, 0, 30)
 TextBox.Text = ""
@@ -105,6 +123,7 @@ TextBox.TextSize = 14
 TextBox.Parent = Frame
 
 local Start = Instance.new("TextButton")
+Start.Name = randomString()
 Start.Position = UDim2.new(0.5, -100, 0, 80)
 Start.Size = UDim2.new(0, 90, 0, 30)
 Start.Text = "Start"
@@ -115,6 +134,7 @@ Start.TextSize = 14
 Start.Parent = Frame
 
 local Stop = Instance.new("TextButton")
+Stop.Name = randomString()
 Stop.Position = UDim2.new(0.5, 10, 0, 80)
 Stop.Size = UDim2.new(0, 90, 0, 30)
 Stop.Text = "Stop"
@@ -125,6 +145,7 @@ Stop.TextSize = 14
 Stop.Parent = Frame
 
 local IY = Instance.new("TextButton")
+IY.Name = randomString()
 IY.Position = UDim2.new(0.5, -100, 0, 140)
 IY.Size = UDim2.new(0, 200, 0, 25)
 IY.Text = "Execute Infinite Yield"
@@ -135,6 +156,7 @@ IY.TextSize = 14
 IY.Parent = Frame
 
 local IY_UICorner = Instance.new("UICorner")
+IY_UICorner.Name = randomString()
 IY_UICorner.CornerRadius = UDim.new(0, 6)
 IY_UICorner.Parent = IY
 
