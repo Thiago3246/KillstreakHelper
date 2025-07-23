@@ -1,5 +1,10 @@
 Scriptblox link: https://scriptblox.com/script/BIG-UPD-Slap-Battles-Killstreak-Helper-41036
 
+Loadstring:
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Thiago3246/KillstreakHelper/main/Source.luau"))()
+```
+
 This script helps you or people farm kills really fast by loop teleporting to someone and resetting (fully automated)
 
 **It's very stable, but if any bugs occur, click on "stop" and "start" to restart the teleportation**
