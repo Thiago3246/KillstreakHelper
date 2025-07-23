@@ -23,7 +23,7 @@ local sbPlaceIds = {
 }
 
 if not sbPlaceIds[game.PlaceId] then
-	local MarketplaceService = cloneref(game:GetService("MarketplaceService"))
+    local MarketplaceService = cloneref(game:GetService("MarketplaceService"))
     local gameName = MarketplaceService:GetProductInfo(game.PlaceId).Name or "Unknown Game"
     print("This script is for Slap Battles, but you are in " .. gameName)
     return
