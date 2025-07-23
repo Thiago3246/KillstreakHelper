@@ -13,6 +13,23 @@
 
 ]]--
 
+local cloneref = cloneref or function(...) return ... end
+
+local sbPlaceIds = {
+    [6403373529] = true,
+    [11520107397] = true,
+    [124596094333302] = true,
+    [9015014224] = true,
+}
+
+local MarketplaceService = cloneref(game:GetService("MarketplaceService"))
+
+if not sbPlaceIds[game.PlaceId] then
+    local gameName = MarketplaceService:GetProductInfo(game.PlaceId).Name
+    print("This script is for Slap Battles, but you are in " .. gameName)
+    return
+end
+
 if getgenv().KsHelper_Loaded then
     return
 end
@@ -22,8 +39,6 @@ pcall(function() getgenv().KsHelper_Loaded = true end)
 if not game:IsLoaded() then
     game.Loaded:Wait()
 end
-
-local cloneref = cloneref or function(...) return ... end
 
 local CoreGui = cloneref(game:GetService("CoreGui"))
 local StarterGui = cloneref(game:GetService("StarterGui"))
