@@ -9,7 +9,7 @@
  |_.__/\_, |   |_| |_||_|_\__,_\__, \___/                       
        |__/                    |___/                            
 
- Credits: @DonjoSyntax on Youtube (Original Idea)
+ Credits: @DonjoSyntax on Youtube (Original Idea) & Infinite Yield
 
 ]]--
 
