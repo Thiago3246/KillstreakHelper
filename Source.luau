@@ -9,7 +9,7 @@
  |_.__/\_, |   |_| |_||_|_\__,_\__, \___/                       
        |__/                    |___/                            
 
- Credits: @DonjoSyntax on Youtube (Original Idea) & Infinite Yield
+ Credits: @DonjoSyntax on Youtube (Original Idea) & Infinite Yield & AI
 
 ]]--
 
@@ -24,7 +24,7 @@ local sbPlaceIds = {
 
 if not sbPlaceIds[game.PlaceId] then
     local MarketplaceService = cloneref(game:GetService("MarketplaceService"))
-    local gameName = MarketplaceService:GetProductInfo(game.PlaceId).Name or "Unknown Game"
+    local gameName = MarketplaceService:GetProductInfo(game.PlaceId).Name or "another game"
     print("This script is for Slap Battles, but you are in " .. gameName)
     return
 end
