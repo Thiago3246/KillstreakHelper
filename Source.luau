@@ -269,11 +269,18 @@ IY.MouseButton1Click:Connect(function()
     end
 end)
 
-for _, part in ipairs(workspace:WaitForChild("Lobby"):WaitForChild("brazil"):GetDescendants()) do
-    if part:IsA("BasePart") then
-        part.CanTouch = false
+-- Runs in the background so a map change can't block the buttons from working
+task.spawn(function()
+    local lobby = workspace:WaitForChild("Lobby", 30)
+    local brazil = lobby and lobby:WaitForChild("brazil", 30)
+    if not brazil then return end
+
+    for _, part in ipairs(brazil:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.CanTouch = false
+        end
     end
-end
+end)
 
 local helperRunning = false
 local targetPlayer
@@ -374,10 +381,20 @@ local function followTarget(id)
     end
 end
 
+-- Like WaitForChild, but gives up as soon as this run is outdated or the character is gone
+local function waitForChild(parent, name, id)
+    local child = parent:FindFirstChild(name)
+    while not child and isActive(id) and parent.Parent do
+        task.wait(0.1)
+        child = parent:FindFirstChild(name)
+    end
+    return child
+end
+
 local function enterArena(id)
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    local rootPart = character:WaitForChild("HumanoidRootPart", 10)
-    local isInArena = character:WaitForChild("isInArena", 10)
+    local rootPart = waitForChild(character, "HumanoidRootPart", id)
+    local isInArena = waitForChild(character, "isInArena", id)
     if not rootPart or not isInArena then return end
 
     while isActive(id) do
