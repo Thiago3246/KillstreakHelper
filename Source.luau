@@ -24,7 +24,10 @@ local sbPlaceIds = {
 
 if not sbPlaceIds[game.PlaceId] then
     local MarketplaceService = cloneref(game:GetService("MarketplaceService"))
-    local gameName = MarketplaceService:GetProductInfo(game.PlaceId).Name or "another game"
+    local ok, info = pcall(function()
+        return MarketplaceService:GetProductInfo(game.PlaceId)
+    end)
+    local gameName = (ok and info and info.Name) or "another game"
     print("This script is for Slap Battles, but you are in " .. gameName)
     return
 end
@@ -42,9 +45,15 @@ end
 local CoreGui = cloneref(game:GetService("CoreGui"))
 local StarterGui = cloneref(game:GetService("StarterGui"))
 local Players = cloneref(game:GetService("Players"))
+local UserInputService = cloneref(game:GetService("UserInputService"))
+local VirtualUser = cloneref(game:GetService("VirtualUser"))
 local LocalPlayer = cloneref(Players.LocalPlayer)
 
 local guiParent = (gethui and gethui()) or CoreGui:FindFirstChild("RobloxGui") or CoreGui
+
+local SAVE_FILE = "KillstreakHelper_target.txt"
+
+local connections = {}
 
 local function randomString()
 	local length = math.random(10,20)
@@ -53,6 +62,24 @@ local function randomString()
 		array[i] = string.char(math.random(32, 126))
 	end
 	return table.concat(array)
+end
+
+local function loadSavedName()
+    local ok, name = pcall(function()
+        if isfile and readfile and isfile(SAVE_FILE) then
+            return readfile(SAVE_FILE)
+        end
+        return ""
+    end)
+    return (ok and type(name) == "string") and name or ""
+end
+
+local function saveName(name)
+    pcall(function()
+        if writefile then
+            writefile(SAVE_FILE, name)
+        end
+    end)
 end
 
 local ScreenGui = Instance.new("ScreenGui")
@@ -67,7 +94,6 @@ Frame.Position = UDim2.new(0.5, -125, 0.5, -90)
 Frame.BackgroundColor3 = Color3.fromRGB(36, 36, 37)
 Frame.BorderSizePixel = 0
 Frame.Active = true
-Frame.Draggable = true
 Frame.Parent = ScreenGui
 
 local UICorner = Instance.new("UICorner")
@@ -128,35 +154,42 @@ local TextBox = Instance.new("TextBox")
 TextBox.Name = randomString()
 TextBox.Position = UDim2.new(0.5, -100, 0, 40)
 TextBox.Size = UDim2.new(0, 200, 0, 30)
-TextBox.Text = ""
+TextBox.Text = loadSavedName()
 TextBox.PlaceholderText = "Player's name"
+TextBox.ClearTextOnFocus = false
 TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
 TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextBox.Font = Enum.Font.Gotham
 TextBox.TextSize = 14
 TextBox.Parent = Frame
 
-local Start = Instance.new("TextButton")
-Start.Name = randomString()
-Start.Position = UDim2.new(0.5, -100, 0, 80)
-Start.Size = UDim2.new(0, 90, 0, 30)
-Start.Text = "Start"
-Start.BackgroundColor3 = Color3.fromRGB(40, 120, 40)
-Start.TextColor3 = Color3.fromRGB(255, 255, 255)
-Start.Font = Enum.Font.GothamBold
-Start.TextSize = 14
-Start.Parent = Frame
+local Toggle = Instance.new("TextButton")
+Toggle.Name = randomString()
+Toggle.Position = UDim2.new(0.5, -100, 0, 78)
+Toggle.Size = UDim2.new(0, 200, 0, 30)
+Toggle.Text = "Start"
+Toggle.BackgroundColor3 = Color3.fromRGB(40, 120, 40)
+Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+Toggle.Font = Enum.Font.GothamBold
+Toggle.TextSize = 14
+Toggle.Parent = Frame
 
-local Stop = Instance.new("TextButton")
-Stop.Name = randomString()
-Stop.Position = UDim2.new(0.5, 10, 0, 80)
-Stop.Size = UDim2.new(0, 90, 0, 30)
-Stop.Text = "Stop"
-Stop.BackgroundColor3 = Color3.fromRGB(120, 40, 40)
-Stop.TextColor3 = Color3.fromRGB(255, 255, 255)
-Stop.Font = Enum.Font.GothamBold
-Stop.TextSize = 14
-Stop.Parent = Frame
+local ToggleUICorner = Instance.new("UICorner")
+ToggleUICorner.Name = randomString()
+ToggleUICorner.CornerRadius = UDim.new(0, 6)
+ToggleUICorner.Parent = Toggle
+
+local Status = Instance.new("TextLabel")
+Status.Name = randomString()
+Status.Position = UDim2.new(0.5, -100, 0, 112)
+Status.Size = UDim2.new(0, 200, 0, 22)
+Status.BackgroundTransparency = 1
+Status.Text = "Stopped | Deaths: 0"
+Status.TextColor3 = Color3.fromRGB(180, 180, 180)
+Status.Font = Enum.Font.Gotham
+Status.TextSize = 13
+Status.TextTruncate = Enum.TextTruncate.AtEnd
+Status.Parent = Frame
 
 local IY = Instance.new("TextButton")
 IY.Name = randomString()
@@ -174,26 +207,65 @@ IY_UICorner.Name = randomString()
 IY_UICorner.CornerRadius = UDim.new(0, 6)
 IY_UICorner.Parent = IY
 
-local function notify(message)
+local bodyElements = { TextBox, Toggle, Status, IY }
+
+local function notify(title, message)
+    pcall(function()
         StarterGui:SetCore("SendNotification", {
-            Title = "Error",
+            Title = title,
             Text = message,
             Duration = 3
         })
+    end)
 end
+
+-- Dragging (Frame.Draggable is deprecated)
+do
+    local dragging = false
+    local dragStart, startPos
+
+    table.insert(connections, Frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = Frame.Position
+        end
+    end))
+
+    table.insert(connections, UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end))
+
+    table.insert(connections, UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end))
+end
+
+-- Built-in anti-AFK for this account
+table.insert(connections, LocalPlayer.Idled:Connect(function()
+    pcall(function()
+        VirtualUser:CaptureController()
+        VirtualUser:ClickButton2(Vector2.new())
+    end)
+end))
 
 IY.MouseButton1Click:Connect(function()
     if getgenv().IY_LOADED then
-        notify("Infinite Yield is already running!")
+        notify("Error", "Infinite Yield is already running!")
         return
     end
 
-    local success, err = pcall(function()
+    local success = pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
     end)
 
     if not success then
-        notify("Infinite Yield failed to load")
+        notify("Error", "Infinite Yield failed to load")
     end
 end)
 
@@ -206,18 +278,48 @@ end
 local helperRunning = false
 local targetPlayer
 local alreadyReset = false
+local deaths = 0
+local statusText = "Stopped"
+
+-- Every start/stop/respawn bumps runId; a loop exits as soon as its id is outdated,
+-- so only one teleport loop can ever be alive at a time.
+local runId = 0
+
+local function isActive(id)
+    return helperRunning and targetPlayer ~= nil and id == runId
+end
+
+local function refreshStatus()
+    Status.Text = statusText .. " | Deaths: " .. deaths
+end
+
+local function setStatus(text)
+    if statusText ~= text then
+        statusText = text
+        refreshStatus()
+    end
+end
 
 local function findPlayer(nickname)
+    local query = nickname:lower()
+
     for _, player in ipairs(Players:GetPlayers()) do
-        if player.Name:lower():find(nickname:lower()) or player.DisplayName:lower():find(nickname:lower()) then
+        if player ~= LocalPlayer and (player.Name:lower() == query or player.DisplayName:lower() == query) then
             return player
         end
     end
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and (player.Name:lower():find(query, 1, true) or player.DisplayName:lower():find(query, 1, true)) then
+            return player
+        end
+    end
+
     return nil
 end
 
-local function followTarget()
-    while helperRunning and targetPlayer do
+local function followTarget(id)
+    while isActive(id) do
         local character = LocalPlayer.Character
         if not character then task.wait(0.1) continue end
 
@@ -232,22 +334,30 @@ local function followTarget()
         local resetEvent = LocalPlayer:FindFirstChild("Reset")
 
         local targetCharacter = targetPlayer.Character
-        if not targetCharacter then task.wait(0.1) continue end
+        if not targetCharacter then
+            setStatus("Waiting for " .. targetPlayer.Name)
+            task.wait(0.1)
+            continue
+        end
 
         local isTargetInArena = targetCharacter:FindFirstChild("isInArena")
         local targetHumanoid = targetCharacter:FindFirstChildOfClass("Humanoid")
         local targetRoot = targetCharacter:FindFirstChild("HumanoidRootPart")
         local isTargetInArenaV2 = targetCharacter:FindFirstChild("KillstreakLevel")
 
-        if(not isTargetInArena or not targetRoot or not targetHumanoid or targetHumanoid.Health <= 0) then
+        if not isTargetInArena or not targetRoot or not targetHumanoid or targetHumanoid.Health <= 0 then
+            setStatus("Waiting for " .. targetPlayer.Name)
             task.wait(0.1)
             continue
         end
 
-        if(not isTargetInArenaV2) and (not isTargetInArena.Value) then
+        if not isTargetInArenaV2 and not isTargetInArena.Value then
+            setStatus("Waiting for " .. targetPlayer.Name)
             task.wait(0.1)
             continue
         end
+
+        setStatus("Following " .. targetPlayer.Name)
 
         if ragdolled and ragdolled.Value then
             if not alreadyReset and resetEvent then
@@ -264,18 +374,23 @@ local function followTarget()
     end
 end
 
-local function enterArena()
+local function enterArena(id)
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    local rootPart = character:WaitForChild("HumanoidRootPart")
-    local isInArena = character:WaitForChild("isInArena")
+    local rootPart = character:WaitForChild("HumanoidRootPart", 10)
+    local isInArena = character:WaitForChild("isInArena", 10)
+    if not rootPart or not isInArena then return end
 
-    while helperRunning and targetPlayer do
+    while isActive(id) do
+        if isInArena.Value then
+            break
+        end
+
         local targetCharacter = targetPlayer.Character
         if targetCharacter then
             local isTargetInArena = targetCharacter:FindFirstChild("isInArena")
             local isTargetInArenaV2 = targetCharacter:FindFirstChild("KillstreakLevel")
 
-            if(isTargetInArena and isTargetInArena.Value) or isTargetInArenaV2 then
+            if (isTargetInArena and isTargetInArena.Value) or isTargetInArenaV2 then
                 local portal = workspace:FindFirstChild("Lobby") and workspace.Lobby:FindFirstChild("Teleport1")
                 if portal and portal:IsA("BasePart") then
                     rootPart.CFrame = portal.CFrame
@@ -283,62 +398,115 @@ local function enterArena()
                 break
             end
         end
+        setStatus("Waiting for " .. targetPlayer.Name .. " to enter arena")
         task.wait(0.2)
     end
 
+    if isActive(id) then
+        followTarget(id)
+    end
+end
+
+local function updateToggle()
     if helperRunning then
-        followTarget()
+        Toggle.Text = "Stop"
+        Toggle.BackgroundColor3 = Color3.fromRGB(120, 40, 40)
+    else
+        Toggle.Text = "Start"
+        Toggle.BackgroundColor3 = Color3.fromRGB(40, 120, 40)
     end
 end
 
 local function startHelper()
-    local nameInput = TextBox.Text
+    if helperRunning then return end
+
+    local nameInput = TextBox.Text:gsub("^%s+", ""):gsub("%s+$", "")
     if nameInput == "" then
-        notify("Enter a player's name!")
+        notify("Error", "Enter a player's name!")
         return
     end
 
     local player = findPlayer(nameInput)
     if not player then
-        notify("Player not found!")
+        notify("Error", "Player not found!")
         return
     end
 
+    TextBox.Text = player.Name
+    saveName(player.Name)
+
     targetPlayer = player
     helperRunning = true
-    task.spawn(enterArena)
+    alreadyReset = false
+    runId += 1
+    updateToggle()
+    setStatus("Starting...")
+    task.spawn(enterArena, runId)
 end
 
 local function stopHelper()
     helperRunning = false
+    runId += 1
+    updateToggle()
+    setStatus("Stopped")
 end
+
+Toggle.MouseButton1Click:Connect(function()
+    if helperRunning then
+        stopHelper()
+    else
+        startHelper()
+    end
+end)
 
 Minimize.MouseButton1Click:Connect(function()
     local minimized = TextBox.Visible == false
-    for _, child in ipairs(Frame:GetChildren()) do
-        if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
-            if child ~= Title and child ~= Close and child ~= Minimize then
-                child.Visible = minimized
-            end
-        end
+    for _, element in ipairs(bodyElements) do
+        element.Visible = minimized
     end
     Frame.Size = minimized and UDim2.new(0, 250, 0, 180) or UDim2.new(0, 250, 0, 30)
 end)
 
+local function trackDeaths(character)
+    local humanoid = character:WaitForChild("Humanoid", 10)
+    if humanoid then
+        humanoid.Died:Connect(function()
+            if helperRunning then
+                deaths += 1
+                refreshStatus()
+            end
+        end)
+    end
+end
+
+if LocalPlayer.Character then
+    task.spawn(trackDeaths, LocalPlayer.Character)
+end
+
+table.insert(connections, LocalPlayer.CharacterAdded:Connect(function(character)
+    if helperRunning and targetPlayer then
+        alreadyReset = false
+        runId += 1
+        task.spawn(enterArena, runId)
+    end
+    trackDeaths(character)
+end))
+
+table.insert(connections, Players.PlayerRemoving:Connect(function(player)
+    if player == targetPlayer then
+        stopHelper()
+        targetPlayer = nil
+        notify("Killstreak Helper", player.Name .. " left the game, stopped.")
+    end
+end))
+
 Close.MouseButton1Click:Connect(function()
     stopHelper()
+    for _, connection in ipairs(connections) do
+        connection:Disconnect()
+    end
     if ScreenGui then
         ScreenGui:Destroy()
     end
     getgenv().KsHelper_Loaded = nil
 end)
-
-LocalPlayer.CharacterAdded:Connect(function()
-    if helperRunning and targetPlayer then
-        alreadyReset = false
-        enterArena()
-    end
-end)
-
-Start.MouseButton1Click:Connect(startHelper)
-Stop.MouseButton1Click:Connect(stopHelper)
